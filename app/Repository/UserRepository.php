@@ -13,12 +13,12 @@ use App\Models\User as Model;
 class UserRepository extends CoreRepository
 {
 
-    /**
-     * @return mixed|string
-     */
-    protected function getModelClass()
+    function getUsersForSelect()
     {
-        return Model::class;
+        $result = $this->startCondition()
+            ->select(["id", "name"])
+            ->get();
+        return $result;
     }
 
     /**
@@ -27,11 +27,32 @@ class UserRepository extends CoreRepository
      */
     public function getUserInfoByApiKey(string $api_key)
     {
-        $user = $this ->startCondition()
-                -> where("api_key", $api_key)
-                -> first();
+        $user = $this->startCondition()
+            ->where("api_key", $api_key)
+            ->first();
         $user->getRoleNames();
         return $user;
     }
 
+    /**
+     * @param $userId
+     * @param $roles
+     * @return bool
+     */
+    public function userHasRole($userId, $roles): bool
+    {
+        return $this
+            ->startCondition()
+            ->whereId($userId)
+            ->first()
+            ->hasRole($roles);
+    }
+
+    /**
+     * @return mixed|string
+     */
+    protected function getModelClass()
+    {
+        return Model::class;
+    }
 }

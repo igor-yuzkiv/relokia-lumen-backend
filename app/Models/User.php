@@ -47,4 +47,13 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
         return isset($roles[0]) ? $roles[0] : null;
     }
 
+    public function assignee()
+    {
+        $this->hasMany(Ticket::class, "assignee", "id");
+    }
+
+    public function reporter()
+    {
+        $this->hasMany(Ticket::class, "reporter", "id");
+    }
 }
